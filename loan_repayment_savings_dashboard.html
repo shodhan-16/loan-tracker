@@ -1,0 +1,604 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f7fa;--surface:#fff;--surface2:#f0f2f7;
+  --text:#1a1d23;--text2:#6b7280;--text3:#9ca3af;
+  --border:#e5e7eb;--accent:#6c47ff;--accent2:#8b6bff;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --amber:#d97706;--amber-bg:#fffbeb;--amber-border:#fde68a;
+  --red:#dc2626;--red-bg:#fef2f2;--red-border:#fecaca;
+  --blue:#2563eb;--blue-bg:#eff6ff;--blue-border:#bfdbfe;
+  --radius:12px;--radius-sm:8px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#0f1117;--surface:#1a1d26;--surface2:#252836;
+  --text:#f1f2f6;--text2:#9ba3af;--text3:#6b7280;
+  --border:#2d3044;--accent:#7c5cff;--accent2:#9d80ff;
+  --green:#22c55e;--green-bg:#052e16;--green-border:#15803d;
+  --amber:#f59e0b;--amber-bg:#1c1009;--amber-border:#92400e;
+  --red:#ef4444;--red-bg:#1c0a0a;--red-border:#7f1d1d;
+  --blue:#60a5fa;--blue-bg:#0c1529;--blue-border:#1e3a6e;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+.app{max-width:1100px;margin:0 auto;padding:16px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.logo-text{font-size:17px;font-weight:600;letter-spacing:-0.3px}
+.logo-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.badge{background:var(--accent);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;letter-spacing:0.5px}
+.tabs{display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:var(--radius-sm);margin-bottom:20px}
+.tab{padding:7px 16px;border-radius:6px;border:none;background:transparent;color:var(--text2);cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tab:hover:not(.active){background:rgba(0,0,0,.04);color:var(--text)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px}
+.card-value{font-size:26px;font-weight:700;letter-spacing:-0.5px;color:var(--text);line-height:1}
+.card-sub{font-size:12px;color:var(--text2);margin-top:4px}
+.stat-accent{color:var(--accent)}
+.stat-green{color:var(--green)}
+.stat-amber{color:var(--amber)}
+.stat-red{color:var(--red)}
+label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:0.3px}
+input,select{display:block;width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:14px;outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(108,71,255,.1)}
+.form-row{margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius-sm);border:none;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-sm{padding:6px 14px;font-size:12px;border-radius:6px}
+.btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-success{background:var(--green);color:#fff}
+.btn-success:hover{opacity:.9}
+.progress-wrap{margin:10px 0}
+.progress-bar{height:10px;background:var(--surface2);border-radius:20px;overflow:hidden;position:relative}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),#a855f7);transition:width .6s ease}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:5px}
+.streak{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--amber-bg);border:1px solid var(--amber-border);border-radius:var(--radius-sm)}
+.streak-fire{font-size:20px}
+.streak-text{font-size:13px;font-weight:600;color:var(--amber)}
+.badge-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.achievement{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.ach-locked{background:var(--surface2);color:var(--text3);border:1px dashed var(--border)}
+.ach-unlocked{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.timeline-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.tl-green{background:var(--green)}
+.tl-accent{background:var(--accent)}
+.tl-gray{background:var(--border)}
+.tl-content{flex:1}
+.tl-label{font-size:13px;font-weight:500;color:var(--text)}
+.tl-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.tip-card{background:var(--blue-bg);border:1px solid var(--blue-border);border-radius:var(--radius-sm);padding:12px;margin-top:12px}
+.tip-card p{font-size:12px;color:var(--text2);line-height:1.6;margin-top:4px}
+.tip-title{font-size:12px;font-weight:700;color:var(--blue)}
+.onboard{text-align:center;padding:40px 20px}
+.onboard h1{font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:8px}
+.onboard p{color:var(--text2);margin-bottom:28px;font-size:15px}
+.onboard-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:560px;margin:0 auto;text-align:left}
+.onboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.section-label{font-size:13px;font-weight:700;color:var(--text);margin:16px 0 10px;letter-spacing:-0.2px}
+.divider{height:1px;background:var(--border);margin:16px 0}
+.chart-wrap{position:relative;width:100%;height:220px}
+.chart-wrap-sm{position:relative;width:100%;height:160px}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.5px}
+.pill-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pill-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
+.pill-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pill-accent{background:rgba(108,71,255,.1);color:var(--accent);border:1px solid rgba(108,71,255,.2)}
+.daily-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:8px}
+.day-btn{aspect-ratio:1;border:1px solid var(--border);border-radius:4px;background:var(--surface2);cursor:pointer;transition:all .1s;position:relative;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text3);flex-direction:column;gap:1px}
+.day-btn.done{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.day-btn.today{border-color:var(--accent);box-shadow:0 0 0 2px rgba(108,71,255,.2)}
+.day-btn:hover{border-color:var(--accent)}
+.day-num{font-size:10px;font-weight:600}
+.check{font-size:12px}
+.insight-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.insight-row:last-child{border-bottom:none}
+.insight-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.insight-text{flex:1}
+.insight-title{font-size:13px;font-weight:500}
+.insight-desc{font-size:11px;color:var(--text3);margin-top:1px}
+.ai-badge{background:linear-gradient(135deg,#6c47ff,#a855f7);color:#fff;font-size:9px;padding:1px 6px;border-radius:20px;font-weight:700;letter-spacing:0.5px;vertical-align:middle;margin-left:5px}
+.export-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;width:100%;margin-top:8px;color:var(--text);font-size:13px;font-weight:500;transition:all .15s}
+.export-btn:hover{border-color:var(--accent);color:var(--accent)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+@media(max-width:600px){.grid-2,.onboard-grid{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr 1fr}.grid-3{grid-template-columns:1fr}}
+</style>
+
+<h2 class="sr-only">Loan Repayment & Savings Planner Dashboard — enter your loan details to generate a personalized repayment and savings plan.</h2>
+<div class="app" id="root"></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const root = $('root');
+const toast = $('toast');
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2500);
+}
+
+function loadState(){
+  try{ return JSON.parse(localStorage.getItem('loanPlanner')||'null'); }catch{return null;}
+}
+function saveState(s){ localStorage.setItem('loanPlanner', JSON.stringify(s)); }
+
+const ACHIEVEMENTS = [
+  {id:'first_mark',icon:'🎯',label:'First Step',desc:'Mark your first day done',req:1},
+  {id:'week1',icon:'🔥',label:'Week Warrior',desc:'7-day streak',req:7},
+  {id:'month1',icon:'💪',label:'Loan Warrior',desc:'30 days done',req:30},
+  {id:'halfway',icon:'🏆',label:'Halfway Hero',desc:'50% paid off',req:50},
+  {id:'sprint',icon:'⚡',label:'Sprint Mode',desc:'14 days in a row',req:14},
+];
+
+let state = loadState() || {
+  view:'onboard', activeTab:'dashboard',
+  loan:0, interest:0, months:12, extraMonthly:0,
+  paidAmount:0, doneDays:{}, streak:0, lastDoneDate:null,
+  setupDate: new Date().toISOString().split('T')[0],
+  achievements:{}
+};
+
+function fmt(n){ return '₹'+Math.round(n).toLocaleString('en-IN'); }
+function fmtShort(n){
+  if(n>=100000) return '₹'+(n/100000).toFixed(1)+'L';
+  if(n>=1000) return '₹'+(n/1000).toFixed(1)+'K';
+  return '₹'+Math.round(n);
+}
+
+function calcEMI(p, r, n){
+  if(r===0) return p/n;
+  const mr = r/100/12;
+  return p * mr * Math.pow(1+mr,n) / (Math.pow(1+mr,n)-1);
+}
+
+function getCalc(){
+  const {loan, interest, months, extraMonthly} = state;
+  const emi = calcEMI(loan, interest, months);
+  const totalRepay = emi * months;
+  const totalInterest = totalRepay - loan;
+  const monthly = emi;
+  const weekly = monthly / 4.33;
+  const daily = monthly / 30;
+  const withExtra = monthly + (extraMonthly||0);
+  const extraMonths = extraMonthly > 0 ? Math.ceil(loan / withExtra) : months;
+  const daysSaved = months - extraMonths;
+  return {emi, totalRepay, totalInterest, monthly, weekly, daily, withExtra, extraMonths, daysSaved};
+}
+
+function getProgress(){
+  const doneDays = state.doneDays || {};
+  const daysMarked = Object.keys(doneDays).filter(k=>doneDays[k]).length;
+  const c = getCalc();
+  const paidAmount = daysMarked * c.daily;
+  const pct = Math.min(100, Math.round((paidAmount/state.loan)*100));
+  const remaining = Math.max(0, state.loan - paidAmount);
+  return {daysMarked, paidAmount, pct, remaining};
+}
+
+function getStreak(){
+  const days = state.doneDays||{};
+  const sorted = Object.keys(days).filter(k=>days[k]).sort();
+  let streak=0,max=0,cur=0;
+  const today = new Date().toISOString().split('T')[0];
+  sorted.forEach((d,i)=>{
+    if(i===0){cur=1;}
+    else{
+      const prev = new Date(sorted[i-1]);
+      const curr = new Date(d);
+      const diff = (curr-prev)/(1000*60*60*24);
+      if(diff===1) cur++; else cur=1;
+    }
+    if(cur>max) max=cur;
+  });
+  if(sorted.includes(today)) streak=cur; else streak=0;
+  return {streak, max, total:sorted.length};
+}
+
+function checkAchievements(){
+  const {streak, total} = getStreak();
+  const prog = getProgress();
+  const a = state.achievements||{};
+  let updated=false;
+  if(total>=1 && !a.first_mark){a.first_mark=true;updated=true;}
+  if(streak>=7 && !a.week1){a.week1=true;updated=true;showToast('🎉 Achievement unlocked: Week Warrior!');}
+  if(total>=30 && !a.month1){a.month1=true;updated=true;showToast('🏆 Achievement: Loan Warrior!');}
+  if(prog.pct>=50 && !a.halfway){a.halfway=true;updated=true;showToast('⚡ Achievement: Halfway Hero!');}
+  if(streak>=14 && !a.sprint){a.sprint=true;updated=true;showToast('🔥 Sprint Mode unlocked!');}
+  if(updated){state.achievements=a;saveState(state);}
+}
+
+let charts = {};
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+function renderOnboard(){
+  root.innerHTML = `
+  <div class="onboard">
+    <div class="logo" style="justify-content:center;margin-bottom:16px">
+      <div class="logo-icon">💰</div>
+      <div><div class="logo-text">LoanPilot</div><div class="logo-sub">Repayment & Savings Planner</div></div>
+    </div>
+    <h1>Take control of your loan</h1>
+    <p>Set your loan details once. Get a personalized daily savings plan, progress tracking, and smart repayment insights.</p>
+    <div class="onboard-form">
+      <div class="section-label">Loan Details</div>
+      <div class="onboard-grid">
+        <div class="form-row"><label>Loan Amount (₹)</label><input type="number" id="inp-loan" placeholder="e.g. 500000" value="${state.loan||''}"></div>
+        <div class="form-row"><label>Annual Interest Rate (%)</label><input type="number" id="inp-rate" placeholder="e.g. 8.5" step="0.1" value="${state.interest||''}"></div>
+      </div>
+      <div class="onboard-grid">
+        <div class="form-row"><label>Repayment Duration</label><input type="number" id="inp-dur" placeholder="e.g. 24" value="${state.months||''}"></div>
+        <div class="form-row"><label>Duration Unit</label><select id="inp-unit"><option value="months">Months</option><option value="years">Years</option></select></div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-label">Optional</div>
+      <div class="form-row"><label>Extra Monthly Savings (₹) <span style="font-weight:400;color:var(--text3)">— pay off faster</span></label><input type="number" id="inp-extra" placeholder="e.g. 2000" value="${state.extraMonthly||''}"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="submitOnboard()">
+        <span>Generate My Plan</span> <span>→</span>
+      </button>
+    </div>
+  </div>`;
+}
+
+function submitOnboard(){
+  const loan = parseFloat($('inp-loan').value);
+  const interest = parseFloat($('inp-rate').value)||0;
+  const dur = parseInt($('inp-dur').value);
+  const unit = $('inp-unit').value;
+  const extra = parseFloat($('inp-extra').value)||0;
+  if(!loan||loan<=0||!dur||dur<=0){showToast('Please enter loan amount and duration.');return;}
+  state.loan = loan;
+  state.interest = interest;
+  state.months = unit==='years' ? dur*12 : dur;
+  state.extraMonthly = extra;
+  state.view = 'app';
+  state.activeTab = 'dashboard';
+  state.doneDays = {};
+  state.setupDate = new Date().toISOString().split('T')[0];
+  state.achievements = {};
+  saveState(state);
+  renderApp();
+}
+
+function renderApp(){
+  destroyChart('breakdown');destroyChart('progress');destroyChart('monthly');
+  root.innerHTML = `
+  <div class="header">
+    <div class="logo"><div class="logo-icon">💰</div><div><div class="logo-text">LoanPilot</div><div class="logo-sub">Repayment & Savings Planner</div></div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="badge">LIVE</span>
+      <button class="btn btn-ghost btn-sm" onclick="resetApp()">⚙ Edit Loan</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab ${state.activeTab==='dashboard'?'active':''}" onclick="switchTab('dashboard')">Dashboard</button>
+    <button class="tab ${state.activeTab==='tracker'?'active':''}" onclick="switchTab('tracker')">Daily Tracker</button>
+    <button class="tab ${state.activeTab==='insights'?'active':''}" onclick="switchTab('insights')">AI Insights</button>
+    <button class="tab ${state.activeTab==='achievements'?'active':''}" onclick="switchTab('achievements')">Achievements</button>
+  </div>
+  <div id="tab-content"></div>`;
+  renderTab();
+}
+
+function switchTab(t){
+  state.activeTab = t;
+  saveState(state);
+  destroyChart('breakdown');destroyChart('progress');destroyChart('monthly');
+  renderApp();
+}
+
+function resetApp(){
+  state.view='onboard';saveState(state);renderOnboard();
+}
+
+function renderTab(){
+  const tc = $('tab-content');
+  if(state.activeTab==='dashboard') renderDashboard(tc);
+  else if(state.activeTab==='tracker') renderTracker(tc);
+  else if(state.activeTab==='insights') renderInsights(tc);
+  else if(state.activeTab==='achievements') renderAchievements(tc);
+}
+
+function renderDashboard(tc){
+  const c = getCalc();
+  const p = getProgress();
+  const s = getStreak();
+  tc.innerHTML = `
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card"><div class="card-title">Total Loan</div><div class="card-value">${fmtShort(state.loan)}</div><div class="card-sub">${fmt(state.loan)}</div></div>
+    <div class="card"><div class="card-title">Remaining</div><div class="card-value stat-red">${fmtShort(p.remaining)}</div><div class="card-sub">${p.pct}% paid off</div></div>
+    <div class="card"><div class="card-title">Daily Target</div><div class="card-value stat-accent">${fmtShort(c.daily)}</div><div class="card-sub">${fmt(c.daily)} / day</div></div>
+    <div class="card"><div class="card-title">Current Streak</div><div class="card-value stat-amber">${s.streak}</div><div class="card-sub">days in a row</div></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Repayment Progress</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+      <span style="font-size:22px;font-weight:700">${p.pct}% Complete</span>
+      <span style="color:var(--text2);font-size:13px">${fmt(p.paidAmount)} of ${fmt(state.loan)}</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${p.pct}%"></div></div><div class="progress-label"><span>Start</span><span>${p.pct}%</span><span>Goal</span></div></div>
+    <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+      <span class="pill pill-green">✓ ${p.daysMarked} days done</span>
+      <span class="pill pill-amber">⏳ ${state.months} month term</span>
+      ${s.streak>0?`<span class="pill pill-accent">🔥 ${s.streak}-day streak</span>`:''}
+      ${c.extraMonths<state.months?`<span class="pill pill-green">⚡ Save ${c.daysSaved} months with extra payments</span>`:''}
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title">Payment Breakdown</div>
+      <div class="grid-3" style="margin-bottom:16px">
+        <div><div style="font-size:11px;color:var(--text3)">Monthly EMI</div><div style="font-size:16px;font-weight:700;margin-top:2px">${fmtShort(c.monthly)}</div></div>
+        <div><div style="font-size:11px;color:var(--text3)">Weekly</div><div style="font-size:16px;font-weight:700;margin-top:2px">${fmtShort(c.weekly)}</div></div>
+        <div><div style="font-size:11px;color:var(--text3)">Total Interest</div><div style="font-size:16px;font-weight:700;margin-top:2px;color:var(--red)">${fmtShort(c.totalInterest)}</div></div>
+      </div>
+      <div class="chart-wrap-sm"><canvas id="breakdown" role="img" aria-label="Pie chart: principal vs interest breakdown">Principal: ${fmt(state.loan)}, Interest: ${fmt(c.totalInterest)}</canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monthly Schedule (first 12)</div>
+      <div class="chart-wrap-sm"><canvas id="monthly" role="img" aria-label="Bar chart of monthly EMI breakdown between principal and interest">Monthly EMI schedule</canvas></div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Repayment Timeline</div>
+      ${buildTimeline(c)}
+    </div>
+    <div class="card">
+      <div class="card-title">Quick Actions</div>
+      <button class="export-btn" onclick="markToday()"><span>✅</span><span>Mark Today as Done</span></button>
+      <button class="export-btn" onclick="exportCSV()"><span>📊</span><span>Export Report as CSV</span></button>
+      <button class="export-btn" onclick="switchTab('insights')"><span>🤖</span><span>Get AI Suggestions <span class="ai-badge">AI</span></span></button>
+      <button class="export-btn" onclick="switchTab('tracker')"><span>📅</span><span>Open Daily Tracker</span></button>
+    </div>
+  </div>`;
+  setTimeout(()=>{
+    renderPieChart(c);
+    renderMonthlyChart(c);
+  },50);
+}
+
+function buildTimeline(c){
+  const now = new Date();
+  const milestones = [25,50,75,100];
+  const p = getProgress();
+  let html = '';
+  milestones.forEach(pct=>{
+    const daysNeeded = Math.round((state.loan * pct/100) / c.daily);
+    const d = new Date(now); d.setDate(d.getDate()+daysNeeded);
+    const label = d.toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+    const done = p.pct >= pct;
+    html += `<div class="timeline-item">
+      <div class="tl-dot ${done?'tl-green':pct===100?'tl-accent':'tl-gray'}"></div>
+      <div class="tl-content"><div class="tl-label">${pct}% paid off <span class="pill ${done?'pill-green':'pill-amber'}" style="margin-left:4px">${done?'Done':label}</span></div><div class="tl-sub">${fmt(state.loan*pct/100)} — day ${daysNeeded}</div></div>
+    </div>`;
+  });
+  return html;
+}
+
+function renderPieChart(c){
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const ctx = $('breakdown');
+  if(!ctx) return;
+  destroyChart('breakdown');
+  charts.breakdown = new Chart(ctx, {
+    type:'doughnut',
+    data:{
+      labels:['Principal','Interest'],
+      datasets:[{data:[Math.round(state.loan),Math.round(c.totalInterest)],backgroundColor:['#6c47ff','#a855f7'],borderWidth:0,hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:(ctx)=>' '+ctx.label+': '+fmt(ctx.raw)}}}}
+  });
+}
+
+function renderMonthlyChart(c){
+  const ctx = $('monthly');
+  if(!ctx) return;
+  destroyChart('monthly');
+  const loan = state.loan, r = state.interest/100/12, n = state.months;
+  const labels=[], principal=[], interest=[];
+  let bal = loan;
+  const emiAmt = c.emi;
+  for(let i=1;i<=Math.min(12,n);i++){
+    const intPart = bal * r;
+    const prinPart = emiAmt - intPart;
+    labels.push('M'+i);
+    interest.push(Math.round(intPart));
+    principal.push(Math.round(prinPart));
+    bal = Math.max(0, bal - prinPart);
+  }
+  charts.monthly = new Chart(ctx, {
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Principal',data:principal,backgroundColor:'#6c47ff',borderRadius:3},
+      {label:'Interest',data:interest,backgroundColor:'#a855f7',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#9ca3af',font:{size:10}}},y:{stacked:true,grid:{color:'rgba(156,163,175,.15)'},ticks:{color:'#9ca3af',font:{size:10},callback:(v)=>fmtShort(v)}}}}
+  });
+}
+
+function renderTracker(tc){
+  const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+  const c = getCalc();
+  const p = getProgress();
+  const s = getStreak();
+  const days = state.doneDays||{};
+
+  let calHtml = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px">';
+  ['S','M','T','W','T','F','S'].forEach(d=>calHtml+=`<div style="text-align:center;font-size:10px;color:var(--text3);padding:4px 0;font-weight:600">${d}</div>`);
+  calHtml += '</div><div class="daily-grid">';
+  for(let i=0;i<firstDay;i++) calHtml+=`<div></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isDone = days[dateStr];
+    const isToday = dateStr===today;
+    calHtml += `<div class="day-btn ${isDone?'done':''} ${isToday?'today':''}" onclick="toggleDay('${dateStr}')">
+      <span class="day-num">${d}</span>
+      ${isDone?'<span class="check">✓</span>':''}
+    </div>`;
+  }
+  calHtml += '</div>';
+
+  tc.innerHTML = `
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="card"><div class="card-title">Days Marked</div><div class="card-value stat-green">${p.daysMarked}</div><div class="card-sub">out of ${state.months*30} total</div></div>
+    <div class="card"><div class="card-title">Current Streak</div><div class="card-value stat-amber">🔥 ${s.streak}</div><div class="card-sub">Best: ${s.max} days</div></div>
+    <div class="card"><div class="card-title">Saved So Far</div><div class="card-value stat-accent">${fmtShort(p.paidAmount)}</div><div class="card-sub">${p.pct}% of loan</div></div>
+    <div class="card"><div class="card-title">Daily Target</div><div class="card-value">${fmtShort(c.daily)}</div><div class="card-sub">save per day</div></div>
+  </div>
+  ${s.streak>=3?`<div class="streak" style="margin-bottom:16px"><span class="streak-fire">🔥</span><span class="streak-text">${s.streak}-day streak! Keep it up, Loan Warrior!</span></div>`:''}
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div class="card-title" style="margin-bottom:0">${now.toLocaleString('en-IN',{month:'long',year:'numeric'})} — Daily Check-ins</div>
+      <button class="btn btn-success btn-sm" onclick="markToday()">✓ Mark Today</button>
+    </div>
+    ${calHtml}
+    <div style="display:flex;gap:12px;margin-top:12px;font-size:11px;color:var(--text3)">
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:2px;margin-right:3px"></span>Done</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border:1px solid var(--accent);border-radius:2px;margin-right:3px"></span>Today</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Progress Overview</div>
+    <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${p.pct}%"></div></div><div class="progress-label"><span>${fmt(p.paidAmount)} saved</span><span>${p.pct}%</span><span>${fmt(state.loan)}</span></div></div>
+  </div>`;
+}
+
+function toggleDay(dateStr){
+  if(!state.doneDays) state.doneDays={};
+  state.doneDays[dateStr] = !state.doneDays[dateStr];
+  saveState(state);
+  checkAchievements();
+  renderApp();
+}
+
+function markToday(){
+  const today = new Date().toISOString().split('T')[0];
+  if(!state.doneDays) state.doneDays={};
+  state.doneDays[today] = true;
+  saveState(state);
+  checkAchievements();
+  showToast('✅ Today marked as done!');
+  state.activeTab = 'tracker';
+  renderApp();
+}
+
+function renderInsights(tc){
+  const c = getCalc();
+  const p = getProgress();
+  const s = getStreak();
+  const daysToFull = Math.ceil((state.loan - p.paidAmount) / c.daily);
+  const extraSaving = state.loan * 0.1;
+  const monthsSaved = Math.round(extraSaving / c.monthly);
+
+  tc.innerHTML = `
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <div class="logo-icon" style="width:28px;height:28px;font-size:14px">🤖</div>
+      <div><div class="card-title" style="margin-bottom:0">AI Repayment Suggestions</div><div style="font-size:11px;color:var(--text3)">Personalized to your loan</div></div>
+      <span class="ai-badge" style="margin-left:auto;font-size:10px">AI POWERED</span>
+    </div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--green-bg)">⚡</div><div class="insight-text"><div class="insight-title">Pay an extra ${fmtShort(c.monthly*0.1)} monthly</div><div class="insight-desc">Adding 10% more per month saves you ${Math.round(monthsSaved)} months on repayment</div></div></div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--blue-bg)">📅</div><div class="insight-text"><div class="insight-title">Bi-weekly payments trick</div><div class="insight-desc">Split your EMI into 2 payments every 2 weeks — equals 13 monthly payments per year</div></div></div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--amber-bg)">🎯</div><div class="insight-text"><div class="insight-title">${daysToFull} days to debt-free</div><div class="insight-desc">At your current daily target of ${fmt(c.daily)}/day, you'll clear the loan on time</div></div></div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--red-bg)">💡</div><div class="insight-text"><div class="insight-title">Round up to ${fmtShort(Math.ceil(c.daily/100)*100)}/day</div><div class="insight-desc">Rounding up your daily saving by ${fmt(Math.ceil(c.daily/100)*100 - c.daily)} accelerates your payoff significantly</div></div></div>
+    <div class="insight-row"><div class="insight-icon" style="background:rgba(108,71,255,.1)">🏦</div><div class="insight-text"><div class="insight-title">Windfall strategy</div><div class="insight-desc">Any bonus or windfall above ${fmtShort(c.monthly*3)} applied directly cuts ${Math.round((c.monthly*3/state.loan)*state.months)} months off your term</div></div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Loan Summary</div>
+      <div class="timeline-item"><div class="tl-dot tl-accent"></div><div class="tl-content"><div class="tl-label">Principal</div><div class="tl-sub">${fmt(state.loan)}</div></div></div>
+      <div class="timeline-item"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-content"><div class="tl-label">Total Interest</div><div class="tl-sub">${fmt(c.totalInterest)} (${state.interest}% p.a.)</div></div></div>
+      <div class="timeline-item"><div class="tl-dot tl-green"></div><div class="tl-content"><div class="tl-label">Total Repayment</div><div class="tl-sub">${fmt(c.totalRepay)}</div></div></div>
+      <div class="timeline-item" style="border:none"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-content"><div class="tl-label">Monthly EMI</div><div class="tl-sub">${fmt(c.monthly)} for ${state.months} months</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Export & Share</div>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Download your repayment plan for offline use or email it.</p>
+      <button class="export-btn" onclick="exportCSV()">📊 Download CSV Report</button>
+      <button class="export-btn" onclick="copyEmailSummary()">📧 Copy Email Summary</button>
+      <button class="export-btn" onclick="showToast('PDF export: connect to your backend API!')">📄 Export PDF (needs backend)</button>
+      <div class="tip-card" style="margin-top:10px">
+        <div class="tip-title">💡 Deployment Tip</div>
+        <p>Connect this to a Node.js/Express API + Firebase to enable email summaries, PDF exports, and cloud sync across devices.</p>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAchievements(tc){
+  const ach = state.achievements||{};
+  const s = getStreak();
+  const p = getProgress();
+  const achieved = Object.keys(ach).filter(k=>ach[k]).length;
+  tc.innerHTML = `
+  <div class="card" style="margin-bottom:16px;text-align:center;padding:24px">
+    <div style="font-size:48px;margin-bottom:8px">🏆</div>
+    <div style="font-size:24px;font-weight:700">${achieved} / ${ACHIEVEMENTS.length}</div>
+    <div style="color:var(--text2);font-size:13px;margin-top:4px">achievements unlocked</div>
+    ${s.streak>0?`<div class="streak" style="margin-top:12px;justify-content:center"><span class="streak-fire">🔥</span><span class="streak-text">${s.streak}-day streak active</span></div>`:''}
+  </div>
+  <div class="grid-3" style="margin-bottom:16px">
+    ${ACHIEVEMENTS.map(a=>{
+      const unlocked = ach[a.id];
+      return `<div class="card" style="text-align:center;padding:16px 12px ${unlocked?';border-color:var(--green-border)':''}">
+        <div style="font-size:32px;margin-bottom:6px;${unlocked?'':'filter:grayscale(1);opacity:0.4'}">${a.icon}</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px;${unlocked?'color:var(--green)':''}">${a.label}</div>
+        <div style="font-size:11px;color:var(--text3)">${a.desc}</div>
+        <div style="margin-top:8px"><span class="pill ${unlocked?'pill-green':'ach-locked'}">${unlocked?'✓ Unlocked':'Locked'}</span></div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="card">
+    <div class="card-title">How to earn more</div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--green-bg)">🎯</div><div class="insight-text"><div class="insight-title">Mark daily savings consistently</div><div class="insight-desc">Use the Daily Tracker to check off each day. Streaks unlock achievements automatically.</div></div></div>
+    <div class="insight-row"><div class="insight-icon" style="background:var(--amber-bg)">🏆</div><div class="insight-text"><div class="insight-title">Reach 50% repayment</div><div class="insight-desc">Keep saving daily until you hit the halfway mark — the Halfway Hero badge unlocks automatically.</div></div></div>
+    <div class="insight-row" style="border-bottom:none"><div class="insight-icon" style="background:rgba(108,71,255,.1)">⚡</div><div class="insight-text"><div class="insight-title">14-day sprint</div><div class="insight-desc">Mark 14 days in a row without missing once to earn Sprint Mode status.</div></div></div>
+  </div>`;
+}
+
+function exportCSV(){
+  const c = getCalc();
+  const rows = [['Month','Opening Balance','EMI','Principal','Interest','Closing Balance']];
+  let bal = state.loan;
+  const r = state.interest/100/12;
+  for(let i=1;i<=state.months;i++){
+    const intPart = Math.round(bal*r);
+    const prinPart = Math.round(c.emi - intPart);
+    const closing = Math.max(0, Math.round(bal - prinPart));
+    rows.push([i, Math.round(bal), Math.round(c.emi), prinPart, intPart, closing]);
+    bal = closing;
+  }
+  const csv = rows.map(r=>r.join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'loan_repayment_plan.csv';
+  a.click();
+  showToast('📊 CSV downloaded!');
+}
+
+function copyEmailSummary(){
+  const c = getCalc();
+  const p = getProgress();
+  const txt = `LoanPilot Weekly Summary\n\nLoan: ${fmt(state.loan)}\nEMI: ${fmt(c.monthly)}/month\nPaid so far: ${fmt(p.paidAmount)} (${p.pct}%)\nRemaining: ${fmt(p.remaining)}\nDaily target: ${fmt(c.daily)}\n\nKeep saving — you're doing great!`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📧 Email summary copied!')).catch(()=>showToast('Copy failed — try again'));
+}
+
+if(state.view==='app') renderApp(); else renderOnboard();
+</script>
